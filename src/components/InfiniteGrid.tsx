@@ -9,21 +9,21 @@ export default function InfiniteGrid() {
             <div className="absolute inset-0 bg-canvas" />
 
             {/* Subtle Animated Grid Pattern - 5% opacity for professional look */}
+            {/* Subtle Animated Grid Pattern - Optimized for Performance */}
             <motion.div
-                className="absolute inset-0"
+                className="absolute inset-0 will-change-transform"
                 style={{
                     backgroundImage: `
             linear-gradient(rgba(210, 105, 30, 0.05) 1px, transparent 1px),
             linear-gradient(90deg, rgba(210, 105, 30, 0.05) 1px, transparent 1px)
           `,
-                    backgroundSize: '50px 50px',
+                    backgroundSize: '40px 40px', // Smaller squares as requested
                 }}
                 animate={{
-                    x: [0, 50],
-                    y: [0, 50],
+                    backgroundPosition: ['0px 0px', '40px 40px'],
                 }}
                 transition={{
-                    duration: 20,
+                    duration: 30, // Slower for smoother feel
                     repeat: Infinity,
                     ease: 'linear',
                 }}

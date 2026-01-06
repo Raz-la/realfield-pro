@@ -41,7 +41,17 @@ export interface Report {
     title: string;
     date: Date;
     stopWork: boolean;
-    content: string;
+    location?: string; // Geotag
+    // Section B: Status
+    constructionPhase: 'Skeleton' | 'Finishing' | 'Systems' | 'Development';
+    // Section C: Inspection
+    generalOverview: string;
+    supervisorNotes: string;
+    rejects: string;
+    guidelines: string;
+    safetyHighlights: string;
+    // Legacy support (optional)
+    content?: string;
     photos: PhotoItem[];
     createdAt: Date;
     updatedAt: Date;

@@ -1,7 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
+// Initialize Gemini inside handler to support key switching gracefully
+// const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
 
 interface Phase {
     id: string;
@@ -42,12 +43,16 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
+        const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+
+        if (!apiKey) {
             return NextResponse.json(
-                { error: 'Gemini API key not configured' },
+                { error: 'Gemini API key not configured. Please add GEMINI_API_KEY to .env.local' },
                 { status: 500 }
             );
         }
+
+        const genAI = new GoogleGenerativeAI(apiKey);
 
         // Identify delayed phases
         const now = new Date();
@@ -111,7 +116,7 @@ Return ONLY valid JSON in this exact format:
   "cascadeImpact": "Brief summary of overall project impact"
 }`;
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();

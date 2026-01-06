@@ -9,14 +9,18 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
-                // Daytime Basalt - Professional Grey/Stone Palette
-                'canvas': '#18181b',         // zinc-900 - Soft deep grey background
-                'surface': '#27272a',        // zinc-800 - Card/surface color
-                'surface-light': '#3f3f46',  // zinc-700 - Lighter surface elements  
-                bronze: '#D2691E',           // Primary accent - unchanged
-                'bronze-light': '#E07B2E',   // Lighter bronze for hovers
-                forest: '#2F4F4F',           // Secondary - unchanged
-                magma: '#FF4500',            // Alert/danger - unchanged
+                // Bright Golan Palette - High Contrast & Vivid
+                'canvas': '#09090b',         // obsidian - Deep background
+                'surface': '#18181b',        // basalt - Card background
+                'surface-highlight': '#27272a', // lighter basalt for hover/active
+                'glass-border': 'rgba(210, 105, 30, 0.2)', // Bronze tint border
+
+                // Accents - Brighter & More Vivid
+                bronze: '#F59E0B',           // Amber-500 equivalent (was D2691E) - Golden/Bronze pop
+                'bronze-dark': '#D97706',    // Amber-600 for gradients
+                forest: '#134E4A',           // Teal-900 (Deep Green)
+                magma: '#FF5722',            // Deep Orange (Vivid Warning)
+                'magma-light': '#FF7043',    // Lighter Orange
             },
             fontFamily: {
                 heebo: ['Heebo', 'sans-serif'],

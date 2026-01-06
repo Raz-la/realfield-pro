@@ -2,22 +2,25 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Loader2, AlertTriangle, Building2 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, AlertTriangle, Building2, Paperclip } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import { useProject } from '@/hooks/useFirestore';
 
 interface Message {
     role: 'user' | 'assistant';
     content: string;
+    image?: string | null;
 }
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Context Awareness Logic
     const params = useParams();
@@ -36,15 +39,33 @@ export default function ChatWidget() {
         scrollToBottom();
     }, [messages]);
 
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSend = async () => {
-        if (!input.trim() || isLoading) return;
+        if ((!input.trim() && !selectedImage) || isLoading) return;
 
         const userMessage = input.trim();
+        const imageToSend = selectedImage;
+
         setInput('');
+        setSelectedImage(null);
         setError(null);
 
         // Add user message
-        setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+        setMessages(prev => [...prev, {
+            role: 'user',
+            content: userMessage,
+            image: imageToSend
+        }]);
         setIsLoading(true);
 
         try {
@@ -55,6 +76,7 @@ export default function ChatWidget() {
                 },
                 body: JSON.stringify({
                     message: userMessage,
+                    image: imageToSend,
                     projectContext: isProjectPage && project ? project : null
                 }),
             });
@@ -209,19 +231,48 @@ export default function ChatWidget() {
 
                         {/* Input */}
                         <div className="p-4 border-t border-bronze/20">
+
+                            {/* Image Preview in Input */}
+                            {selectedImage && (
+                                <div className="relative inline-block mb-2">
+                                    <img src={selectedImage} alt="Preview" className="h-16 w-16 object-cover rounded-lg border border-bronze/50" />
+                                    <button
+                                        onClick={() => setSelectedImage(null)}
+                                        className="absolute -top-2 -right-2 bg-basalt rounded-full p-1 border border-white/20 hover:bg-red-500/80 transition-colors"
+                                    >
+                                        <X className="w-3 h-3 text-white" />
+                                    </button>
+                                </div>
+                            )}
+
                             <div className="flex gap-2">
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    accept="image/*"
+                                    onChange={handleFileSelect}
+                                    className="hidden"
+                                />
+                                <button
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="w-12 h-12 rounded-lg bg-basalt/50 border border-bronze/30 hover:bg-bronze/20 transition-colors flex items-center justify-center group"
+                                    title="Add Photo"
+                                >
+                                    <Paperclip className="w-5 h-5 text-gray-400 group-hover:text-bronze transition-colors" />
+                                </button>
+
                                 <input
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyPress={handleKeyPress}
-                                    placeholder={isProjectPage ? "שאל על הפרויקט (תקציב, לו״ז)..." : "שאל על תקני בנייה ובטיחות..."}
+                                    placeholder={selectedImage ? "Describe this photo..." : (isProjectPage ? "שאל על הפרויקט (תקציב, לו״ז)..." : "שאל על תקני בנייה ובטיחות...")}
                                     className="flex-1 bg-basalt/50 border border-bronze/30 rounded-lg px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-bronze transition-colors"
                                     disabled={isLoading}
                                 />
                                 <button
-                                    onClick={handleSend}
-                                    disabled={!input.trim() || isLoading}
+                                    onClick={() => handleSend()} // Wrap to match signature
+                                    disabled={(!input.trim() && !selectedImage) || isLoading}
                                     className="w-12 h-12 rounded-lg bg-bronze hover:bg-[#cd5c0e] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
                                 >
                                     <Send className="w-5 h-5 text-white" />

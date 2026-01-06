@@ -18,9 +18,16 @@ let app: FirebaseApp;
 let db: Firestore;
 let storage: FirebaseStorage;
 
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
+
 if (getApps().length === 0) {
     app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
+    // Initialize Firestore with persistent cache
+    db = initializeFirestore(app, {
+        localCache: persistentLocalCache({
+            tabManager: persistentMultipleTabManager()
+        })
+    });
     storage = getStorage(app);
 } else {
     app = getApps()[0];

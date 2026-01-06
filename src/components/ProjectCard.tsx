@@ -32,41 +32,80 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         }
     };
 
+    // Bento Palette Status Colors
     const statusColors = {
-        Active: 'bg-green-500/20 text-green-400 border-green-500/30',
-        'On Hold': 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-        Completed: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+        Active: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_10px_rgba(52,211,153,0.1)]',
+        'On Hold': 'bg-bronze/10 text-bronze border border-bronze/20',
+        Completed: 'bg-zinc-500/10 text-zinc-400 border border-zinc-500/20',
     };
 
     return (
         <>
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ y: -4, scale: 1.02 }}
                 onClick={() => router.push(`/dashboard/projects/${project.id}`)}
-                className="glass p-6 rounded-xl cursor-pointer group relative overflow-hidden"
+                className="bg-surface hover:bg-surface-highlight border border-white/5 hover:border-bronze/30 p-5 rounded-2xl cursor-pointer group relative shadow-lg hover:shadow-2xl hover:shadow-black/50 transition-all duration-300"
             >
-                {/* Bronze Accent Bar */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-bronze to-transparent" />
+                {/* Header Row: Icon + Date */}
+                <div className="flex justify-between items-start mb-6">
+                    <div className="relative">
+                        {project.logoUrl ? (
+                            <img
+                                src={project.logoUrl}
+                                alt={project.name}
+                                className="w-14 h-14 rounded-xl object-cover shadow-md"
+                            />
+                        ) : (
+                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-bronze/10 to-bronze/5 flex items-center justify-center border border-white/5 group-hover:border-bronze/30 transition-colors">
+                                <Building2 className="w-7 h-7 text-bronze group-hover:text-white transition-colors" />
+                            </div>
+                        )}
+                        {/* Status Indicator Dot */}
+                        <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-surface ${project.status === 'Active' ? 'bg-emerald-500' : 'bg-zinc-500'}`} />
+                    </div>
 
-                {/* Context Menu Button */}
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setShowContextMenu(!showContextMenu);
-                    }}
-                    className="absolute top-4 right-4 p-2 rounded-lg hover:bg-basalt transition-colors"
-                >
-                    <MoreVertical className="w-5 h-5 text-gray-400" />
-                </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowContextMenu(!showContextMenu);
+                        }}
+                        className="p-2 rounded-lg hover:bg-white/5 text-zinc-500 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
+                    >
+                        <MoreVertical className="w-5 h-5" />
+                    </button>
+                </div>
+
+                {/* Project Info */}
+                <div className="space-y-1 mb-6">
+                    <h3 className="text-xl font-bold text-white group-hover:text-bronze transition-colors truncate">
+                        {project.name}
+                    </h3>
+                    <p className="text-sm text-zinc-400 truncate">
+                        {project.client} • {project.address}
+                    </p>
+                </div>
+
+                {/* Footer: Status Badge + Date */}
+                <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                    <span className={`px-3 py-1 rounded-lg text-xs font-semibold ${statusColors[project.status] || statusColors.Active}`}>
+                        {project.status}
+                    </span>
+
+                    {project.lastOpenedAt && (
+                        <span className="text-xs text-zinc-600 group-hover:text-zinc-500 transition-colors font-mono">
+                            {new Date(project.lastOpenedAt).toLocaleDateString('he-IL')}
+                        </span>
+                    )}
+                </div>
 
                 {/* Context Menu */}
                 {showContextMenu && (
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        className="absolute top-14 right-4 glass rounded-lg p-2 z-10 min-w-[150px]"
+                        className="absolute top-12 left-4 bg-surface-highlight border border-white/10 shadow-xl rounded-xl p-1.5 z-20 min-w-[140px] animate-in fade-in zoom-in-95 duration-100"
                     >
                         <button
                             onClick={(e) => {
@@ -74,10 +113,10 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                                 setShowEditModal(true);
                                 setShowContextMenu(false);
                             }}
-                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-bronze/20 transition-colors text-left"
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors text-sm text-left text-zinc-300"
                         >
                             <Edit className="w-4 h-4" />
-                            Edit
+                            <span>ערוך</span>
                         </button>
                         <button
                             onClick={(e) => {
@@ -86,55 +125,13 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                                 setShowContextMenu(false);
                             }}
                             disabled={isDeleting}
-                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/20 transition-colors text-red-400 text-left"
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-magma/10 transition-colors text-sm text-magma text-left"
                         >
                             <Trash2 className="w-4 h-4" />
-                            {isDeleting ? 'Deleting...' : 'Delete'}
+                            <span>{isDeleting ? 'מוחק...' : 'מחק'}</span>
                         </button>
                     </div>
                 )}
-
-                {/* Logo or Icon */}
-                <div className="mb-4">
-                    {project.logoUrl ? (
-                        <img
-                            src={project.logoUrl}
-                            alt={project.name}
-                            className="w-16 h-16 rounded-lg object-cover"
-                        />
-                    ) : (
-                        <div className="w-16 h-16 rounded-lg bg-bronze/10 flex items-center justify-center">
-                            <Building2 className="w-8 h-8 text-bronze" />
-                        </div>
-                    )}
-                </div>
-
-                {/* Project Info */}
-                <h3 className="text-2xl font-bold mb-2 group-hover:text-bronze transition-colors">
-                    {project.name}
-                </h3>
-                <p className="text-gray-400 mb-1">
-                    <span className="text-bronze font-semibold">Client:</span> {project.client}
-                </p>
-                <p className="text-gray-400 mb-4 text-sm line-clamp-2">
-                    <span className="text-bronze font-semibold">Location:</span> {project.address}
-                </p>
-
-                {/* Status Badge */}
-                <div className="flex items-center justify-between">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${statusColors[project.status]}`}>
-                        {project.status}
-                    </span>
-
-                    {project.lastOpenedAt && (
-                        <span className="text-xs text-gray-500">
-                            Last opened: {new Date(project.lastOpenedAt).toLocaleDateString()}
-                        </span>
-                    )}
-                </div>
-
-                {/* Hover Effect Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-bronze/0 to-bronze/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             </motion.div>
 
             {/* Edit Modal */}

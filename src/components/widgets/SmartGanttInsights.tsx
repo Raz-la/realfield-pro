@@ -34,7 +34,7 @@ export default function SmartGanttInsights({
             <div className="glass p-4 rounded-xl">
                 <div className="flex items-center gap-2 text-bronze">
                     <TrendingUp className="w-5 h-5 animate-pulse" />
-                    <span className="text-sm font-semibold">Analyzing dependencies...</span>
+                    <span className="text-sm font-semibold">מנתח תלויות וסיכונים...</span>
                 </div>
             </div>
         );
@@ -45,7 +45,7 @@ export default function SmartGanttInsights({
             <div className="glass p-4 rounded-xl border-2 border-green-500/30">
                 <div className="flex items-center gap-2 text-green-400">
                     <TrendingUp className="w-5 h-5" />
-                    <span className="text-sm font-semibold">All phases on schedule! 🎉</span>
+                    <span className="text-sm font-semibold">כל השלבים כרגע בזמן! 🎉</span>
                 </div>
             </div>
         );
@@ -70,9 +70,9 @@ export default function SmartGanttInsights({
                         <AlertTriangle className="w-5 h-5 text-magma" />
                     </div>
                     <div>
-                        <h3 className="font-bold text-white">Delay Cascade Detected</h3>
-                        <p className="text-xs text-gray-400">
-                            {delayedPhases.length} delayed phase{delayedPhases.length !== 1 ? 's' : ''} affecting {impactedPhases.length} other{impactedPhases.length !== 1 ? 's' : ''}
+                        <h3 className="font-bold text-white">זוהתה שרשרת עיכובים</h3>
+                        <p className="text-xs text-zinc-400">
+                            {delayedPhases.length} שלבים מאחרים משפיעים על {impactedPhases.length} שלבים עתידיים
                         </p>
                     </div>
                 </div>
@@ -81,9 +81,9 @@ export default function SmartGanttInsights({
                     className="w-8 h-8 rounded-full hover:bg-bronze/20 transition-colors flex items-center justify-center"
                 >
                     {isExpanded ? (
-                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                        <ChevronUp className="w-5 h-5 text-zinc-400" />
                     ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                        <ChevronDown className="w-5 h-5 text-zinc-400" />
                     )}
                 </button>
             </div>
@@ -98,7 +98,7 @@ export default function SmartGanttInsights({
                     >
                         {/* Cascade Impact */}
                         <div className="bg-basalt/50 p-4 rounded-lg">
-                            <p className="text-sm text-gray-300">{cascadeImpact}</p>
+                            <p className="text-sm text-zinc-300">{cascadeImpact}</p>
                         </div>
 
                         {/* Impacted Phases */}
@@ -106,7 +106,7 @@ export default function SmartGanttInsights({
                             <div>
                                 <h4 className="text-sm font-semibold text-bronze mb-3 flex items-center gap-2">
                                     <AlertTriangle className="w-4 h-4" />
-                                    Affected Phases
+                                    שלבים מושפעים
                                 </h4>
                                 <div className="space-y-2">
                                     {impactedPhases.map((phase, index) => (
@@ -120,7 +120,7 @@ export default function SmartGanttInsights({
                                             <div className="flex items-start justify-between mb-2">
                                                 <span className="font-semibold text-sm">{phase.phaseName}</span>
                                                 <span className="text-xs px-2 py-1 rounded-full bg-black/30">
-                                                    +{phase.estimatedDelay} days
+                                                    +{phase.estimatedDelay} ימים
                                                 </span>
                                             </div>
                                             <p className="text-xs opacity-90">{phase.reason}</p>
@@ -135,7 +135,7 @@ export default function SmartGanttInsights({
                             <div>
                                 <h4 className="text-sm font-semibold text-bronze mb-3 flex items-center gap-2">
                                     <Lightbulb className="w-4 h-4" />
-                                    AI Recommendations
+                                    המלצות AI
                                 </h4>
                                 <div className="space-y-2">
                                     {recommendations.map((rec, index) => (
@@ -147,7 +147,7 @@ export default function SmartGanttInsights({
                                             className="flex items-start gap-3 p-3 bg-bronze/10 rounded-lg"
                                         >
                                             <span className="text-bronze font-bold text-sm">{index + 1}.</span>
-                                            <p className="text-sm text-gray-300 flex-1">{rec}</p>
+                                            <p className="text-sm text-zinc-300 flex-1">{rec}</p>
                                         </motion.div>
                                     ))}
                                 </div>
