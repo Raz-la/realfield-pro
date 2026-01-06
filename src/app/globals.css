@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #18181b;
+  /* zinc-900 - Professional grey */
+  --surface: #27272a;
+  /* zinc-800 - Card surface */
+  --border: #3f3f46;
+  /* zinc-700 - Borders */
+  --foreground: #fafafa;
+  /* zinc-50 - Primary text */
+  --foreground-muted: #a1a1aa;
+  /* zinc-400 - Secondary text */
+  --bronze: #D2691E;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Heebo', sans-serif;
+  overflow-x: hidden;
+  direction: rtl;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #27272a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D2691E;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #E07B2E;
+}
+
+/* Bronze Highlights */
+::selection {
+  background-color: #D2691E;
+  color: #18181b;
+}
+
+/* Smooth Transitions */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Glass Effect Helper - Professional Grey with more transparency */
+.glass {
+  background: rgba(39, 39, 42, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(63, 63, 70, 0.5);
+}
+
+/* Button Styles */
+.btn-primary {
+  background: linear-gradient(135deg, #D2691E 0%, #cd5c0e 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(210, 105, 30, 0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #D2691E;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: 2px solid #D2691E;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #D2691E;
+  color: #09090b;
+}
+
+/* Chat Widget Animations */
+@keyframes chat-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-notification {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+.chat-message {
+  animation: chat-message-in 0.3s ease-out;
+}
+
+.pulse-badge {
+  animation: pulse-notification 2s ease-in-out infinite;
+}
